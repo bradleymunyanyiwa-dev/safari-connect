@@ -1,96 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Lato:ital,wght@0,400;0,700;0,900;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Zimbabwe Hunting Adventures — design system
+   All colors HSL. Wood + safari + amber gold. */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Wood tones */
+    --background: 22 60% 15%;            /* Dark Wood Brown #3E2010 */
+    --background-deep: 22 78% 9%;        /* Darker Wood #2A1505 */
+    --surface: 22 60% 22%;               /* Medium Wood #5C3317 */
+    --foreground: 38 47% 93%;            /* Cream White #F5F0E8 */
+    --foreground-dim: 38 35% 75%;        /* Warm Beige #D4C5A9 */
+    --foreground-muted: 30 24% 44%;      /* Khaki #8B7355 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 22 60% 22%;
+    --card-foreground: 38 47% 93%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 22 78% 9%;
+    --popover-foreground: 38 47% 93%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Brand actions */
+    --primary: 16 100% 27%;              /* Red Brown #8B2500 */
+    --primary-foreground: 38 47% 93%;
+    --primary-glow: 16 95% 38%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 80 39% 30%;             /* Olive #556B2F */
+    --secondary-foreground: 38 47% 93%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 22 60% 19%;
+    --muted-foreground: 38 35% 75%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 45 86% 46%;                /* Amber Gold #D4A017 */
+    --accent-foreground: 22 78% 9%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --success: 138 25% 39%;              /* Forest Green #4A7C59 */
+    --success-foreground: 38 47% 93%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --destructive: 0 65% 35%;
+    --destructive-foreground: 38 47% 93%;
 
-    --radius: 0.5rem;
+    --border: 30 24% 32%;                /* Khaki dim */
+    --input: 22 60% 22%;
+    --ring: 45 86% 46%;
 
-    --sidebar-background: 0 0% 98%;
+    --radius: 0.75rem;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* Aged paper for field-guide cards */
+    --paper: 42 60% 87%;                 /* #F0E6CC */
+    --paper-foreground: 22 78% 9%;
+    --paper-ink: 22 70% 15%;
 
-    --sidebar-primary: 240 5.9% 10%;
+    /* Gradients */
+    --gradient-wood: linear-gradient(180deg, hsl(22 60% 18%) 0%, hsl(22 78% 9%) 100%);
+    --gradient-wood-button: linear-gradient(180deg, hsl(16 95% 32%) 0%, hsl(16 100% 22%) 100%);
+    --gradient-olive-button: linear-gradient(180deg, hsl(80 39% 35%) 0%, hsl(80 45% 22%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(45 86% 56%) 0%, hsl(38 80% 42%) 100%);
+    --gradient-hero-fade: linear-gradient(180deg, transparent 0%, hsl(22 78% 9% / 0.4) 50%, hsl(22 78% 9%) 100%);
+    --gradient-paper: linear-gradient(180deg, hsl(42 65% 90%) 0%, hsl(42 50% 82%) 100%);
 
-    --sidebar-primary-foreground: 0 0% 98%;
+    /* Shadows */
+    --shadow-card: 0 4px 14px -2px hsl(0 0% 0% / 0.45);
+    --shadow-button: 0 4px 12px -2px hsl(0 0% 0% / 0.55), inset 0 1px 0 hsl(45 86% 70% / 0.18);
+    --shadow-glow: 0 0 32px hsl(45 86% 46% / 0.35);
+    --shadow-deep: 0 18px 40px -12px hsl(0 0% 0% / 0.7);
 
-    --sidebar-accent: 240 4.8% 95.9%;
+    /* Motion */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar (unused but kept for shadcn) */
+    --sidebar-background: 22 78% 9%;
+    --sidebar-foreground: 38 47% 93%;
+    --sidebar-primary: 45 86% 46%;
+    --sidebar-primary-foreground: 22 78% 9%;
+    --sidebar-accent: 22 60% 22%;
+    --sidebar-accent-foreground: 38 47% 93%;
+    --sidebar-border: 30 24% 32%;
+    --sidebar-ring: 45 86% 46%;
   }
 }
 
@@ -99,7 +88,85 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
-  body {
-    @apply bg-background text-foreground;
+  html {
+    scroll-behavior: smooth;
   }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    background-image:
+      radial-gradient(ellipse at top, hsl(22 60% 18%) 0%, hsl(22 78% 9%) 70%);
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
+  }
+}
+
+@layer components {
+  /* Reusable wood-grain surface */
+  .wood-surface {
+    background: var(--gradient-wood);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Aged-paper field guide card */
+  .paper-card {
+    background: var(--gradient-paper);
+    color: hsl(var(--paper-foreground));
+    box-shadow: var(--shadow-deep);
+    border: 1px solid hsl(30 30% 55% / 0.3);
+  }
+
+  /* Binoculars overlay — top portion of the scouting screen */
+  .binoculars {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 38vh;
+    min-height: 220px;
+    max-height: 360px;
+    pointer-events: none;
+    background: radial-gradient(
+        ellipse 22% 70% at 30% 50%,
+        transparent 0%,
+        transparent 78%,
+        hsl(0 0% 0%) 80%
+      ),
+      radial-gradient(
+        ellipse 22% 70% at 70% 50%,
+        transparent 0%,
+        transparent 78%,
+        hsl(0 0% 0%) 80%
+      ),
+      hsl(0 0% 0%);
+    -webkit-mask-composite: source-over;
+    z-index: 5;
+  }
+  .binoculars::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, hsl(0 0% 0%) 0%, transparent 8%, transparent 92%, hsl(0 0% 0%) 100%);
+    pointer-events: none;
+  }
+
+  /* Crosshair brackets layered above binoculars */
+  .crosshair-bracket {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border: 2px solid hsl(80 60% 55%);
+    opacity: 0.85;
+  }
+
+  .text-shadow-soft {
+    text-shadow: 0 2px 12px hsl(0 0% 0% / 0.55);
+  }
+}
+
+@layer utilities {
+  .font-display { font-family: 'Merriweather', Georgia, serif; }
+  .font-body { font-family: 'Lato', system-ui, sans-serif; }
 }
