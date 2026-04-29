@@ -64,8 +64,8 @@ const Pay = () => {
           ))}
         </ul>
 
-        <Button variant="hunt" size="lg" className="w-full" onClick={handlePay}>
-          Pay $5 & unlock
+        <Button variant="hunt" size="lg" className="w-full" onClick={handlePay} disabled={loading}>
+          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Pay $5 & unlock"}
         </Button>
         <div className="flex justify-between text-xs text-foreground-dim mt-4">
           <button onClick={refresh} className="hover:text-accent">Refresh status</button>
