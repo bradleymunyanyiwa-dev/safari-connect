@@ -28,8 +28,7 @@ export const AnimalDetailSheet = ({ animal, open, onOpenChange }: Props) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="paper-card max-w-xl p-0 overflow-hidden gap-0 border-none rounded-2xl sm:rounded-2xl"
-        hideClose
+        className="paper-card max-w-xl p-0 overflow-hidden gap-0 border-none rounded-2xl sm:rounded-2xl [&>button.absolute]:hidden"
       >
         {/* Header band */}
         <div className="flex items-start gap-4 p-5 pb-3 border-b border-paper-ink/15">
