@@ -29,7 +29,7 @@ const Index = () => {
               <p className="text-[10px] uppercase tracking-[0.2em] text-foreground-dim">Est. 2026</p>
             </div>
           </div>
-          <Link to="/scouting">
+          <Link to="/auth">
             <Button variant="ghost" size="sm" className="text-foreground-dim hover:text-accent hover:bg-transparent">
               Sign in
             </Button>
