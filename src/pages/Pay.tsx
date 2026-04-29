@@ -1,15 +1,47 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { Crosshair, Check } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Crosshair, Check, Loader2 } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Pay = () => {
-  const { user, signOut, refresh } = useAuth();
+  const { user, signOut, refresh, hasPaid } = useAuth();
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (params.get("status") === "success") {
+      toast.success("Payment received! Confirming…");
+      // Poll a few times for webhook to land
+      let tries = 0;
+      const id = setInterval(async () => {
+        await refresh();
+        tries++;
+        if (tries > 8) clearInterval(id);
+      }, 1500);
+      return () => clearInterval(id);
+    }
+    if (params.get("status") === "cancelled") {
+      toast.info("Payment cancelled");
+    }
+  }, [params, refresh]);
+
+  useEffect(() => {
+    if (hasPaid) navigate("/scouting", { replace: true });
+  }, [hasPaid, navigate]);
 
   const handlePay = async () => {
-    toast.info("Stripe checkout will be wired in next stage. Add your Stripe keys to enable.");
+    setLoading(true);
+    const { data, error } = await supabase.functions.invoke("create-registration-checkout");
+    setLoading(false);
+    if (error || !data?.url) {
+      toast.error(error?.message || "Could not start checkout");
+      return;
+    }
+    window.location.href = data.url;
   };
 
   return (
@@ -32,8 +64,8 @@ const Pay = () => {
           ))}
         </ul>
 
-        <Button variant="hunt" size="lg" className="w-full" onClick={handlePay}>
-          Pay $5 & unlock
+        <Button variant="hunt" size="lg" className="w-full" onClick={handlePay} disabled={loading}>
+          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Pay $5 & unlock"}
         </Button>
         <div className="flex justify-between text-xs text-foreground-dim mt-4">
           <button onClick={refresh} className="hover:text-accent">Refresh status</button>
