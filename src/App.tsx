@@ -28,6 +28,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/guides" element={<Guides />} />
+            <Route path="/guides/:id" element={<GuideDetail />} />
             <Route path="/pay" element={<RequireAuth><Pay /></RequireAuth>} />
             <Route path="/guide-pending" element={<RequireAuth><GuidePending /></RequireAuth>} />
             <Route path="/guide-profile" element={<RequireAuth roles={["guide"]}><GuideProfile /></RequireAuth>} />
