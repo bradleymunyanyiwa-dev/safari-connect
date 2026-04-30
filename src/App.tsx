@@ -32,6 +32,8 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/guides" element={<Guides />} />
             <Route path="/guides/:id" element={<GuideDetail />} />
+            <Route path="/guides/:id/request" element={<RequestAuth />} />
+            <Route path="/my-trips" element={<RequireAuth><MyTrips /></RequireAuth>} />
             <Route path="/pay" element={<RequireAuth><Pay /></RequireAuth>} />
             <Route path="/guide-pending" element={<RequireAuth><GuidePending /></RequireAuth>} />
             <Route path="/guide-profile" element={<RequireAuth roles={["guide"]}><GuideProfile /></RequireAuth>} />
