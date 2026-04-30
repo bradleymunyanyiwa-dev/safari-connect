@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, MapPin, Award, Mail, Phone, BadgeCheck, Loader2 } from "lucide-react";
+import { ArrowLeft, MapPin, Award, Mail, Phone, BadgeCheck, Loader2, Send } from "lucide-react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { useTripList } from "@/store/tripList";
 
 type Guide = {
   id: string;
