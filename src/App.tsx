@@ -10,6 +10,7 @@ import Scouting from "./pages/Scouting.tsx";
 import Auth from "./pages/Auth.tsx";
 import Pay from "./pages/Pay.tsx";
 import GuidePending from "./pages/GuidePending.tsx";
+import GuideProfile from "./pages/GuideProfile.tsx";
 import AdminGuides from "./pages/AdminGuides.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/pay" element={<RequireAuth><Pay /></RequireAuth>} />
             <Route path="/guide-pending" element={<RequireAuth><GuidePending /></RequireAuth>} />
+            <Route path="/guide-profile" element={<RequireAuth roles={["guide"]}><GuideProfile /></RequireAuth>} />
             <Route path="/scouting" element={<RequireAuth requirePaid><Scouting /></RequireAuth>} />
             <Route path="/admin/guides" element={<RequireAuth roles={["admin"]}><AdminGuides /></RequireAuth>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

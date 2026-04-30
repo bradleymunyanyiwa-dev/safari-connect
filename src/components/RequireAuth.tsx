@@ -24,8 +24,14 @@ export const RequireAuth = ({ children, roles, requirePaid }: Props) => {
   if (requirePaid && role === "client" && !hasPaid) {
     return <Navigate to="/pay" replace />;
   }
-  if (role === "guide" && guideStatus !== "approved" && location.pathname !== "/guide-pending" && !location.pathname.startsWith("/auth")) {
-    return <Navigate to="/guide-pending" replace />;
+  if (
+    role === "guide" &&
+    guideStatus !== "approved" &&
+    location.pathname !== "/guide-pending" &&
+    location.pathname !== "/guide-profile" &&
+    !location.pathname.startsWith("/auth")
+  ) {
+    return <Navigate to={guideStatus ? "/guide-pending" : "/guide-profile"} replace />;
   }
   return <>{children}</>;
 };

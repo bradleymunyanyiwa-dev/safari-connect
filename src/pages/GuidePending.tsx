@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { Hourglass } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const GuidePending = () => {
   const { user, guideStatus, signOut, refresh } = useAuth();
@@ -21,6 +21,9 @@ const GuidePending = () => {
             ? "We weren't able to approve your guide profile at this time. Contact our team for next steps."
             : "Thanks for registering as a guide. Our team is reviewing your credentials. You'll be notified by email once your profile is approved and goes live in the directory."}
         </p>
+        <Button variant="hunt" className="w-full mb-3" asChild>
+          <Link to="/guide-profile">Edit profile</Link>
+        </Button>
         <div className="flex gap-3">
           <Button variant="outline" className="flex-1" onClick={refresh}>Refresh</Button>
           <Button variant="ghost" className="flex-1" onClick={async () => { await signOut(); navigate("/"); }}>Sign out</Button>
