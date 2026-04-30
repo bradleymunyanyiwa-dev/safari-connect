@@ -54,9 +54,11 @@ const Index = () => {
                 Start Scouting
               </Button>
             </Link>
-            <Button variant="wood" size="xl" disabled className="opacity-70">
-              View Guides
-            </Button>
+            <Link to="/guides">
+              <Button variant="wood" size="xl">
+                View Guides
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
