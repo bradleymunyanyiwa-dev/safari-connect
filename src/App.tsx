@@ -32,7 +32,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/guides" element={<Guides />} />
             <Route path="/guides/:id" element={<GuideDetail />} />
-            <Route path="/guides/:id/request" element={<RequestAuth />} />
+            <Route path="/guides/:id/request" element={<RequireAuth roles={["client"]}><RequestTrip /></RequireAuth>} />
             <Route path="/my-trips" element={<RequireAuth><MyTrips /></RequireAuth>} />
             <Route path="/pay" element={<RequireAuth><Pay /></RequireAuth>} />
             <Route path="/guide-pending" element={<RequireAuth><GuidePending /></RequireAuth>} />
