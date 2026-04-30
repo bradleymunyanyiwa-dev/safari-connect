@@ -28,9 +28,6 @@ const GuideDetail = () => {
 
   useEffect(() => {
     if (!id) return;
-
-  useEffect(() => {
-    if (!id) return;
     (async () => {
       const { data, error } = await supabase
         .from("guides")
