@@ -21,8 +21,13 @@ type Guide = {
 
 const GuideDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const { user, role } = useAuth();
+  const tripCount = useTripList((s) => s.list.length);
   const [guide, setGuide] = useState<Guide | null>(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!id) return;
 
   useEffect(() => {
     if (!id) return;
