@@ -13,6 +13,8 @@ import GuidePending from "./pages/GuidePending.tsx";
 import GuideProfile from "./pages/GuideProfile.tsx";
 import Guides from "./pages/Guides.tsx";
 import GuideDetail from "./pages/GuideDetail.tsx";
+import RequestTrip from "./pages/RequestTrip.tsx";
+import MyTrips from "./pages/MyTrips.tsx";
 import AdminGuides from "./pages/AdminGuides.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
