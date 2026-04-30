@@ -61,6 +61,14 @@ const Index = () => {
                 View Guides
               </Button>
             </Link>
+            {user && (
+              <Link to="/my-trips">
+                <Button variant="wood" size="xl">
+                  <Briefcase className="w-5 h-5" />
+                  My Trips
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </section>
