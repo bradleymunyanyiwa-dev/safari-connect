@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Compass, BookOpen, Users, Crosshair } from "lucide-react";
+import { Compass, BookOpen, Users, Crosshair, Briefcase } from "lucide-react";
 import heroImg from "@/assets/hero-savanna.jpg";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
+  const { user } = useAuth();
   return (
     <div className="min-h-screen flex flex-col">
       {/* HERO */}
@@ -59,6 +61,14 @@ const Index = () => {
                 View Guides
               </Button>
             </Link>
+            {user && (
+              <Link to="/my-trips">
+                <Button variant="wood" size="xl">
+                  <Briefcase className="w-5 h-5" />
+                  My Trips
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </section>

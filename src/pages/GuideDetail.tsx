@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, MapPin, Award, Mail, Phone, BadgeCheck, Loader2 } from "lucide-react";
+import { ArrowLeft, MapPin, Award, Mail, Phone, BadgeCheck, Loader2, Send } from "lucide-react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { useTripList } from "@/store/tripList";
 
 type Guide = {
   id: string;
@@ -18,6 +21,8 @@ type Guide = {
 
 const GuideDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const { user, role } = useAuth();
+  const tripCount = useTripList((s) => s.list.length);
   const [guide, setGuide] = useState<Guide | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -124,6 +129,34 @@ const GuideDetail = () => {
               </div>
             </Section>
           )}
+
+          <Section label="Book this guide">
+            {!user ? (
+              <Button asChild variant="hunt" size="lg" className="w-full sm:w-auto">
+                <Link to="/auth">Sign in to request a trip</Link>
+              </Button>
+            ) : role === "guide" ? (
+              <p className="text-sm text-foreground-dim">Guides can't request trips.</p>
+            ) : (
+              <div className="space-y-3">
+                <p className="text-sm text-foreground-dim">
+                  {tripCount > 0
+                    ? `You have ${tripCount} animal${tripCount === 1 ? "" : "s"} on your hunting list.`
+                    : "Add animals from Scouting to your hunting list, then send the request."}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Button asChild variant="hunt" size="lg" disabled={tripCount === 0}>
+                    <Link to={`/guides/${guide.id}/request`}>
+                      <Send className="w-4 h-4" /> Request Trip
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg">
+                    <Link to="/scouting">Browse Animals</Link>
+                  </Button>
+                </div>
+              </div>
+            )}
+          </Section>
         </div>
       </div>
     </div>

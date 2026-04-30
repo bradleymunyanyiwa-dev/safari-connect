@@ -128,6 +128,59 @@ export type Database = {
         }
         Relationships: []
       }
+      trip_requests: {
+        Row: {
+          animal_ids: number[]
+          client_id: string
+          created_at: string
+          guide_id: string
+          guide_response: string | null
+          id: string
+          message: string | null
+          party_size: number
+          preferred_end: string | null
+          preferred_start: string | null
+          status: Database["public"]["Enums"]["trip_status"]
+          updated_at: string
+        }
+        Insert: {
+          animal_ids?: number[]
+          client_id: string
+          created_at?: string
+          guide_id: string
+          guide_response?: string | null
+          id?: string
+          message?: string | null
+          party_size?: number
+          preferred_end?: string | null
+          preferred_start?: string | null
+          status?: Database["public"]["Enums"]["trip_status"]
+          updated_at?: string
+        }
+        Update: {
+          animal_ids?: number[]
+          client_id?: string
+          created_at?: string
+          guide_id?: string
+          guide_response?: string | null
+          id?: string
+          message?: string | null
+          party_size?: number
+          preferred_end?: string | null
+          preferred_start?: string | null
+          status?: Database["public"]["Enums"]["trip_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trip_requests_guide_id_fkey"
+            columns: ["guide_id"]
+            isOneToOne: false
+            referencedRelation: "guides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -165,6 +218,12 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "guide" | "client"
+      trip_status:
+        | "pending"
+        | "accepted"
+        | "declined"
+        | "completed"
+        | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -293,6 +352,13 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "guide", "client"],
+      trip_status: [
+        "pending",
+        "accepted",
+        "declined",
+        "completed",
+        "cancelled",
+      ],
     },
   },
 } as const
