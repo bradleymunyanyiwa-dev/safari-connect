@@ -197,7 +197,7 @@ const GuideProfile = () => {
               onChange={(e) => setBio(e.target.value)}
               rows={5}
               maxLength={2000}
-              placeholder="Tell hunters about your experience, philosophy, and what makes your operation unique."
+              placeholder="Tell clients about your experience, philosophy, and what makes your operation unique."
             />
             <p className="text-xs text-foreground-dim mt-1">{bio.length}/2000</p>
           </div>
