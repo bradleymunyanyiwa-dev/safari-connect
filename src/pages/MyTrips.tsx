@@ -220,30 +220,35 @@ const TripCard = ({
         </div>
       )}
 
-      {isGuide && trip.status === "pending" && (
-        <div className="flex gap-2 pt-2 border-t border-border">
-          <Button size="sm" variant="hunt" onClick={() => onUpdate(trip.id, "accepted")}>
-            Accept
+      <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
+        {trip.status !== "cancelled" && trip.status !== "declined" && (
+          <Button asChild size="sm" variant="outline">
+            <Link to={`/trips/${trip.id}/messages`}>
+              <MessageSquare className="w-4 h-4" /> Message
+            </Link>
           </Button>
-          <Button size="sm" variant="outline" onClick={() => onUpdate(trip.id, "declined")}>
-            Decline
-          </Button>
-        </div>
-      )}
-      {isGuide && trip.status === "accepted" && (
-        <div className="flex gap-2 pt-2 border-t border-border">
+        )}
+        {isGuide && trip.status === "pending" && (
+          <>
+            <Button size="sm" variant="hunt" onClick={() => onUpdate(trip.id, "accepted")}>
+              Accept
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => onUpdate(trip.id, "declined")}>
+              Decline
+            </Button>
+          </>
+        )}
+        {isGuide && trip.status === "accepted" && (
           <Button size="sm" variant="hunt" onClick={() => onUpdate(trip.id, "completed")}>
             Mark Completed
           </Button>
-        </div>
-      )}
-      {!isGuide && trip.status === "pending" && (
-        <div className="flex gap-2 pt-2 border-t border-border">
+        )}
+        {!isGuide && trip.status === "pending" && (
           <Button size="sm" variant="outline" onClick={() => onUpdate(trip.id, "cancelled")}>
             Cancel Request
           </Button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
