@@ -20,13 +20,13 @@ const Scouting = () => {
   }, [query]);
 
   return (
-    <div className="relative min-h-screen pb-20">
-      {/* Binoculars overlay (decorative) */}
+    <div className="relative min-h-screen pb-20 bg-background">
+      {/* Binoculars vignette overlay (decorative, fixed) */}
       <div className="binoculars" aria-hidden>
-        <span className="crosshair-bracket animate-scan" style={{ top: "32%", left: "26%", borderRight: "none", borderBottom: "none" }} />
-        <span className="crosshair-bracket animate-scan" style={{ top: "32%", right: "26%", borderLeft: "none", borderBottom: "none" }} />
-        <span className="crosshair-bracket animate-scan" style={{ bottom: "32%", left: "26%", borderRight: "none", borderTop: "none" }} />
-        <span className="crosshair-bracket animate-scan" style={{ bottom: "32%", right: "26%", borderLeft: "none", borderTop: "none" }} />
+        <span className="crosshair-bracket animate-scan" style={{ top: "30%", left: "20%", borderRight: "none", borderBottom: "none" }} />
+        <span className="crosshair-bracket animate-scan" style={{ top: "30%", right: "20%", borderLeft: "none", borderBottom: "none" }} />
+        <span className="crosshair-bracket animate-scan" style={{ bottom: "30%", left: "20%", borderRight: "none", borderTop: "none" }} />
+        <span className="crosshair-bracket animate-scan" style={{ bottom: "30%", right: "20%", borderLeft: "none", borderTop: "none" }} />
       </div>
 
       {/* Top bar */}
@@ -55,8 +55,8 @@ const Scouting = () => {
         </button>
       </header>
 
-      {/* Search bar — sits below the binoculars area */}
-      <div className="relative z-10 mt-[36vh] sm:mt-[34vh] px-4">
+      {/* Search bar */}
+      <div className="relative z-10 mt-4 px-4">
         <div className="relative max-w-xl mx-auto">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground-muted" />
           <Input
