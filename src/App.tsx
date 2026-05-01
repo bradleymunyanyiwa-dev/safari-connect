@@ -15,6 +15,7 @@ import Guides from "./pages/Guides.tsx";
 import GuideDetail from "./pages/GuideDetail.tsx";
 import RequestTrip from "./pages/RequestTrip.tsx";
 import MyTrips from "./pages/MyTrips.tsx";
+import TripMessages from "./pages/TripMessages.tsx";
 import AdminGuides from "./pages/AdminGuides.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/guides/:id" element={<GuideDetail />} />
             <Route path="/guides/:id/request" element={<RequireAuth roles={["client"]}><RequestTrip /></RequireAuth>} />
             <Route path="/my-trips" element={<RequireAuth><MyTrips /></RequireAuth>} />
+            <Route path="/trips/:id/messages" element={<RequireAuth><TripMessages /></RequireAuth>} />
             <Route path="/pay" element={<RequireAuth><Pay /></RequireAuth>} />
             <Route path="/guide-pending" element={<RequireAuth><GuidePending /></RequireAuth>} />
             <Route path="/guide-profile" element={<RequireAuth roles={["guide"]}><GuideProfile /></RequireAuth>} />
