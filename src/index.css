@@ -119,37 +119,58 @@
     border: 1px solid hsl(30 30% 55% / 0.3);
   }
 
-  /* Binoculars overlay — top portion of the scouting screen */
+  /* Binoculars overlay — twin-lens vignette across the whole viewport */
   .binoculars {
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 38vh;
-    min-height: 220px;
-    max-height: 360px;
+    position: fixed;
+    inset: 0;
     pointer-events: none;
-    background: radial-gradient(
-        ellipse 22% 70% at 30% 50%,
+    z-index: 5;
+    background:
+      radial-gradient(
+        ellipse 38% 55% at 32% 42%,
         transparent 0%,
-        transparent 78%,
-        hsl(0 0% 0%) 80%
+        transparent 62%,
+        hsl(var(--background-deep) / 0.55) 78%,
+        hsl(var(--background-deep)) 92%
       ),
       radial-gradient(
-        ellipse 22% 70% at 70% 50%,
+        ellipse 38% 55% at 68% 42%,
         transparent 0%,
-        transparent 78%,
-        hsl(0 0% 0%) 80%
-      ),
-      hsl(0 0% 0%);
-    -webkit-mask-composite: source-over;
-    z-index: 5;
+        transparent 62%,
+        hsl(var(--background-deep) / 0.55) 78%,
+        hsl(var(--background-deep)) 92%
+      );
+    background-blend-mode: multiply;
   }
+  /* Bridge between the two lenses — soft shadow, not solid */
   .binoculars::after {
     content: "";
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(to bottom, hsl(0 0% 0%) 0%, transparent 8%, transparent 92%, hsl(0 0% 0%) 100%);
+      radial-gradient(ellipse 8% 30% at 50% 42%, hsl(var(--background-deep) / 0.85) 0%, transparent 70%),
+      linear-gradient(to bottom, hsl(var(--background-deep) / 0.4) 0%, transparent 18%, transparent 82%, hsl(var(--background-deep) / 0.6) 100%);
     pointer-events: none;
+  }
+
+  @media (min-width: 640px) {
+    .binoculars {
+      background:
+        radial-gradient(
+          ellipse 28% 60% at 32% 45%,
+          transparent 0%,
+          transparent 70%,
+          hsl(var(--background-deep) / 0.6) 82%,
+          hsl(var(--background-deep)) 95%
+        ),
+        radial-gradient(
+          ellipse 28% 60% at 68% 45%,
+          transparent 0%,
+          transparent 70%,
+          hsl(var(--background-deep) / 0.6) 82%,
+          hsl(var(--background-deep)) 95%
+        );
+    }
   }
 
   /* Crosshair brackets layered above binoculars */
