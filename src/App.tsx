@@ -17,6 +17,8 @@ import RequestTrip from "./pages/RequestTrip.tsx";
 import MyTrips from "./pages/MyTrips.tsx";
 import TripMessages from "./pages/TripMessages.tsx";
 import AdminGuides from "./pages/AdminGuides.tsx";
+import AdminDashboard from "./pages/AdminDashboard.tsx";
+import AdminTrips from "./pages/AdminTrips.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
