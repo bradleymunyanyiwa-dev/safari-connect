@@ -42,7 +42,9 @@ const App = () => (
             <Route path="/guide-pending" element={<RequireAuth><GuidePending /></RequireAuth>} />
             <Route path="/guide-profile" element={<RequireAuth roles={["guide"]}><GuideProfile /></RequireAuth>} />
             <Route path="/scouting" element={<RequireAuth requirePaid><Scouting /></RequireAuth>} />
+            <Route path="/admin" element={<RequireAuth roles={["admin"]}><AdminDashboard /></RequireAuth>} />
             <Route path="/admin/guides" element={<RequireAuth roles={["admin"]}><AdminGuides /></RequireAuth>} />
+            <Route path="/admin/trips" element={<RequireAuth roles={["admin"]}><AdminTrips /></RequireAuth>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
