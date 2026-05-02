@@ -119,57 +119,48 @@
     border: 1px solid hsl(30 30% 55% / 0.3);
   }
 
-  /* Binoculars overlay — twin-lens vignette across the whole viewport */
+  /* Binoculars overlay — twin-lens cutout from a dark wash.
+     Mask-image makes the lens centers truly transparent so content shows
+     through, while the surround stays a clean solid vignette. */
   .binoculars {
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 5;
-    background:
-      radial-gradient(
-        ellipse 38% 55% at 32% 42%,
-        transparent 0%,
-        transparent 62%,
-        hsl(var(--background-deep) / 0.55) 78%,
-        hsl(var(--background-deep)) 92%
-      ),
-      radial-gradient(
-        ellipse 38% 55% at 68% 42%,
-        transparent 0%,
-        transparent 62%,
-        hsl(var(--background-deep) / 0.55) 78%,
-        hsl(var(--background-deep)) 92%
-      );
-    background-blend-mode: multiply;
+    background: hsl(var(--background-deep) / 0.92);
+    -webkit-mask-image:
+      radial-gradient(circle at 30% 42%, transparent 0, transparent 28%, black 36%),
+      radial-gradient(circle at 70% 42%, transparent 0, transparent 28%, black 36%);
+    mask-image:
+      radial-gradient(circle at 30% 42%, transparent 0, transparent 28%, black 36%),
+      radial-gradient(circle at 70% 42%, transparent 0, transparent 28%, black 36%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
   }
-  /* Bridge between the two lenses — soft shadow, not solid */
-  .binoculars::after {
+  /* Inner ring shadow to give the lens edges depth */
+  .binoculars::before {
     content: "";
     position: absolute;
     inset: 0;
-    background:
-      radial-gradient(ellipse 8% 30% at 50% 42%, hsl(var(--background-deep) / 0.85) 0%, transparent 70%),
-      linear-gradient(to bottom, hsl(var(--background-deep) / 0.4) 0%, transparent 18%, transparent 82%, hsl(var(--background-deep) / 0.6) 100%);
     pointer-events: none;
+    background:
+      radial-gradient(circle at 30% 42%, transparent 24%, hsl(0 0% 0% / 0.55) 28%, transparent 34%),
+      radial-gradient(circle at 70% 42%, transparent 24%, hsl(0 0% 0% / 0.55) 28%, transparent 34%);
   }
 
   @media (min-width: 640px) {
     .binoculars {
+      -webkit-mask-image:
+        radial-gradient(circle at 32% 48%, transparent 0, transparent 20%, black 26%),
+        radial-gradient(circle at 68% 48%, transparent 0, transparent 20%, black 26%);
+      mask-image:
+        radial-gradient(circle at 32% 48%, transparent 0, transparent 20%, black 26%),
+        radial-gradient(circle at 68% 48%, transparent 0, transparent 20%, black 26%);
+    }
+    .binoculars::before {
       background:
-        radial-gradient(
-          ellipse 28% 60% at 32% 45%,
-          transparent 0%,
-          transparent 70%,
-          hsl(var(--background-deep) / 0.6) 82%,
-          hsl(var(--background-deep)) 95%
-        ),
-        radial-gradient(
-          ellipse 28% 60% at 68% 45%,
-          transparent 0%,
-          transparent 70%,
-          hsl(var(--background-deep) / 0.6) 82%,
-          hsl(var(--background-deep)) 95%
-        );
+        radial-gradient(circle at 32% 48%, transparent 17%, hsl(0 0% 0% / 0.55) 20%, transparent 26%),
+        radial-gradient(circle at 68% 48%, transparent 17%, hsl(0 0% 0% / 0.55) 20%, transparent 26%);
     }
   }
 
