@@ -31,11 +31,21 @@ const Index = () => {
               <p className="text-[10px] uppercase tracking-[0.2em] text-foreground-dim">Est. 2026</p>
             </div>
           </div>
-          <Link to="/auth">
-            <Button variant="ghost" size="sm" className="text-foreground-dim hover:text-accent hover:bg-transparent">
-              {user ? "Account" : "Sign in"}
-            </Button>
-          </Link>
+          <div className="flex items-center gap-1">
+            {role === "admin" && (
+              <Link to="/admin">
+                <Button variant="ghost" size="sm" className="text-accent hover:text-accent hover:bg-transparent gap-1.5">
+                  <ShieldCheck className="w-4 h-4" />
+                  Admin
+                </Button>
+              </Link>
+            )}
+            <Link to="/auth">
+              <Button variant="ghost" size="sm" className="text-foreground-dim hover:text-accent hover:bg-transparent">
+                {user ? "Account" : "Sign in"}
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <div className="relative z-10 container pb-10 sm:pb-24 animate-fade-in-up">
