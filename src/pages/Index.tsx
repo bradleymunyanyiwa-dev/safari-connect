@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Compass, BookOpen, Users, Crosshair, Briefcase, ArrowRight } from "lucide-react";
+import { Compass, BookOpen, Users, Crosshair, Briefcase, ArrowRight, ShieldCheck } from "lucide-react";
 import heroImg from "@/assets/hero-savanna.jpg";
 import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   return (
     <div className="min-h-screen flex flex-col">
       {/* HERO */}
