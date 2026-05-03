@@ -22,7 +22,26 @@ type TripMeta = {
   client_id: string;
   guide_id: string;
   status: string;
+  package_id: string | null;
 };
+
+type HuntingPackage = {
+  id: string;
+  name: string;
+  description: string | null;
+  price_cents: number;
+  currency: string;
+  duration_days: number;
+  inclusions: string[];
+  exclusions: string[];
+};
+
+const formatPrice = (cents: number, currency: string) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currency.toUpperCase(),
+    maximumFractionDigits: 0,
+  }).format(cents / 100);
 
 const bodySchema = z.string().trim().min(1, "Message can't be empty").max(4000, "Too long");
 
