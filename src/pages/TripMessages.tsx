@@ -205,6 +205,61 @@ const TripMessages = () => {
           <p className="text-xs text-foreground-dim uppercase tracking-[0.2em] mt-1">
             Trip · {trip.status}
           </p>
+
+          {pkg && (
+            <div className="mt-4 bg-muted/40 border border-border rounded-md p-4">
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <div className="flex items-center gap-2">
+                  <Package className="w-4 h-4 text-accent" />
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-foreground-dim">Package</p>
+                    <h2 className="font-display text-base font-bold">{pkg.name}</h2>
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="font-display text-lg font-black text-accent">
+                    {formatPrice(pkg.price_cents, pkg.currency)}
+                  </p>
+                  <p className="text-[10px] uppercase tracking-wider text-foreground-dim flex items-center gap-1 justify-end">
+                    <Clock className="w-3 h-3" /> {pkg.duration_days} day{pkg.duration_days === 1 ? "" : "s"}
+                  </p>
+                </div>
+              </div>
+              {pkg.description && (
+                <p className="text-xs text-foreground-dim mb-2">{pkg.description}</p>
+              )}
+              {(pkg.inclusions.length > 0 || pkg.exclusions.length > 0) && (
+                <div className="grid sm:grid-cols-2 gap-3 text-xs mt-2">
+                  {pkg.inclusions.length > 0 && (
+                    <div>
+                      <p className="font-semibold text-foreground mb-1">Included</p>
+                      <ul className="space-y-1">
+                        {pkg.inclusions.map((it) => (
+                          <li key={it} className="flex items-start gap-1.5 text-foreground-dim">
+                            <Check className="w-3 h-3 text-accent mt-0.5 shrink-0" />
+                            <span>{it}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {pkg.exclusions.length > 0 && (
+                    <div>
+                      <p className="font-semibold text-foreground mb-1">Not included</p>
+                      <ul className="space-y-1">
+                        {pkg.exclusions.map((it) => (
+                          <li key={it} className="flex items-start gap-1.5 text-foreground-dim">
+                            <X className="w-3 h-3 text-destructive mt-0.5 shrink-0" />
+                            <span>{it}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
