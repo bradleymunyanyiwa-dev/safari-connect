@@ -234,8 +234,6 @@ const TripCard = ({
         </div>
       </div>
 
-      {animalNames.length > 0 && (
-        <div className="mb-4">
       {pkg && (
         <div className="mb-4 bg-muted/40 border border-border rounded-md p-4">
           <div className="flex items-start justify-between gap-3 mb-2">
