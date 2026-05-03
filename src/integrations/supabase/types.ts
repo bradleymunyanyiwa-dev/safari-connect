@@ -98,6 +98,54 @@ export type Database = {
         }
         Relationships: []
       }
+      hunting_packages: {
+        Row: {
+          animal_ids: number[]
+          created_at: string
+          currency: string
+          description: string | null
+          duration_days: number
+          exclusions: string[]
+          id: string
+          inclusions: string[]
+          is_active: boolean
+          name: string
+          price_cents: number
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          animal_ids?: number[]
+          created_at?: string
+          currency?: string
+          description?: string | null
+          duration_days?: number
+          exclusions?: string[]
+          id?: string
+          inclusions?: string[]
+          is_active?: boolean
+          name: string
+          price_cents?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          animal_ids?: number[]
+          created_at?: string
+          currency?: string
+          description?: string | null
+          duration_days?: number
+          exclusions?: string[]
+          id?: string
+          inclusions?: string[]
+          is_active?: boolean
+          name?: string
+          price_cents?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           body: string
@@ -172,6 +220,7 @@ export type Database = {
           guide_response: string | null
           id: string
           message: string | null
+          package_id: string | null
           party_size: number
           preferred_end: string | null
           preferred_start: string | null
@@ -186,6 +235,7 @@ export type Database = {
           guide_response?: string | null
           id?: string
           message?: string | null
+          package_id?: string | null
           party_size?: number
           preferred_end?: string | null
           preferred_start?: string | null
@@ -200,6 +250,7 @@ export type Database = {
           guide_response?: string | null
           id?: string
           message?: string | null
+          package_id?: string | null
           party_size?: number
           preferred_end?: string | null
           preferred_start?: string | null
@@ -212,6 +263,13 @@ export type Database = {
             columns: ["guide_id"]
             isOneToOne: false
             referencedRelation: "guides"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trip_requests_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "hunting_packages"
             referencedColumns: ["id"]
           },
         ]
