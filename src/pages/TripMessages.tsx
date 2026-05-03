@@ -49,6 +49,7 @@ const TripMessages = () => {
   const { id } = useParams<{ id: string }>();
   const { user, loading: authLoading } = useAuth();
   const [trip, setTrip] = useState<TripMeta | null>(null);
+  const [pkg, setPkg] = useState<HuntingPackage | null>(null);
   const [counterpartyName, setCounterpartyName] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [draft, setDraft] = useState("");
