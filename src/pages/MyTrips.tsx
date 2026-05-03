@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Loader2, Calendar, Users, MessageSquare } from "lucide-react";
+import { ArrowLeft, Loader2, Calendar, Users, MessageSquare, Package, Check, X, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -15,6 +15,7 @@ type TripRow = {
   client_id: string;
   guide_id: string;
   animal_ids: number[];
+  package_id: string | null;
   preferred_start: string | null;
   preferred_end: string | null;
   party_size: number;
@@ -26,6 +27,23 @@ type TripRow = {
 
 type Guide = { id: string; full_name: string };
 type Profile = { user_id: string; display_name: string | null };
+type HuntingPackage = {
+  id: string;
+  name: string;
+  description: string | null;
+  price_cents: number;
+  currency: string;
+  duration_days: number;
+  inclusions: string[];
+  exclusions: string[];
+};
+
+const formatPrice = (cents: number, currency: string) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currency.toUpperCase(),
+    maximumFractionDigits: 0,
+  }).format(cents / 100);
 
 const statusVariant: Record<TripStatus, "default" | "secondary" | "destructive" | "outline"> = {
   pending: "secondary",
@@ -40,6 +58,7 @@ const MyTrips = () => {
   const [trips, setTrips] = useState<TripRow[]>([]);
   const [guidesById, setGuidesById] = useState<Record<string, Guide>>({});
   const [clientsById, setClientsById] = useState<Record<string, Profile>>({});
+  const [packagesById, setPackagesById] = useState<Record<string, HuntingPackage>>({});
   const [loading, setLoading] = useState(true);
 
   const isGuide = role === "guide";
@@ -82,6 +101,18 @@ const MyTrips = () => {
         setGuidesById(map);
       }
     }
+
+    const pkgIds = Array.from(new Set(list.map((t) => t.package_id).filter(Boolean) as string[]));
+    if (pkgIds.length) {
+      const { data: pkgs } = await supabase
+        .from("hunting_packages")
+        .select("*")
+        .in("id", pkgIds);
+      const map: Record<string, HuntingPackage> = {};
+      (pkgs ?? []).forEach((p) => (map[p.id] = p as HuntingPackage));
+      setPackagesById(map);
+    }
+
     setLoading(false);
   };
 
@@ -144,6 +175,7 @@ const MyTrips = () => {
                     ? clientsById[t.client_id]?.display_name ?? "Hunter"
                     : guidesById[t.guide_id]?.full_name ?? "Guide"
                 }
+                pkg={t.package_id ? packagesById[t.package_id] : undefined}
                 isGuide={isGuide}
                 onUpdate={updateStatus}
               />
@@ -158,11 +190,13 @@ const MyTrips = () => {
 const TripCard = ({
   trip,
   title,
+  pkg,
   isGuide,
   onUpdate,
 }: {
   trip: TripRow;
   title: string;
+  pkg?: HuntingPackage;
   isGuide: boolean;
   onUpdate: (id: string, status: TripStatus) => void;
 }) => {
@@ -199,6 +233,61 @@ const TripCard = ({
           Party of {trip.party_size}
         </div>
       </div>
+
+      {pkg && (
+        <div className="mb-4 bg-muted/40 border border-border rounded-md p-4">
+          <div className="flex items-start justify-between gap-3 mb-2">
+            <div className="flex items-center gap-2">
+              <Package className="w-4 h-4 text-accent" />
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-foreground-dim">Package</p>
+                <h3 className="font-display text-base font-bold">{pkg.name}</h3>
+              </div>
+            </div>
+            <div className="text-right shrink-0">
+              <p className="font-display text-lg font-black text-accent">
+                {formatPrice(pkg.price_cents, pkg.currency)}
+              </p>
+              <p className="text-[10px] uppercase tracking-wider text-foreground-dim flex items-center gap-1 justify-end">
+                <Clock className="w-3 h-3" /> {pkg.duration_days} day{pkg.duration_days === 1 ? "" : "s"}
+              </p>
+            </div>
+          </div>
+          {pkg.description && (
+            <p className="text-xs text-foreground-dim mb-2">{pkg.description}</p>
+          )}
+          {(pkg.inclusions.length > 0 || pkg.exclusions.length > 0) && (
+            <div className="grid sm:grid-cols-2 gap-3 text-xs mt-2">
+              {pkg.inclusions.length > 0 && (
+                <div>
+                  <p className="font-semibold text-foreground mb-1">Included</p>
+                  <ul className="space-y-1">
+                    {pkg.inclusions.map((it) => (
+                      <li key={it} className="flex items-start gap-1.5 text-foreground-dim">
+                        <Check className="w-3 h-3 text-accent mt-0.5 shrink-0" />
+                        <span>{it}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {pkg.exclusions.length > 0 && (
+                <div>
+                  <p className="font-semibold text-foreground mb-1">Not included</p>
+                  <ul className="space-y-1">
+                    {pkg.exclusions.map((it) => (
+                      <li key={it} className="flex items-start gap-1.5 text-foreground-dim">
+                        <X className="w-3 h-3 text-destructive mt-0.5 shrink-0" />
+                        <span>{it}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {animalNames.length > 0 && (
         <div className="mb-4">

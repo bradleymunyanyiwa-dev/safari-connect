@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams, Navigate } from "react-router-dom";
-import { ArrowLeft, Loader2, Send } from "lucide-react";
+import { ArrowLeft, Loader2, Send, Package, Check, X, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,7 +22,26 @@ type TripMeta = {
   client_id: string;
   guide_id: string;
   status: string;
+  package_id: string | null;
 };
+
+type HuntingPackage = {
+  id: string;
+  name: string;
+  description: string | null;
+  price_cents: number;
+  currency: string;
+  duration_days: number;
+  inclusions: string[];
+  exclusions: string[];
+};
+
+const formatPrice = (cents: number, currency: string) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currency.toUpperCase(),
+    maximumFractionDigits: 0,
+  }).format(cents / 100);
 
 const bodySchema = z.string().trim().min(1, "Message can't be empty").max(4000, "Too long");
 
@@ -30,6 +49,7 @@ const TripMessages = () => {
   const { id } = useParams<{ id: string }>();
   const { user, loading: authLoading } = useAuth();
   const [trip, setTrip] = useState<TripMeta | null>(null);
+  const [pkg, setPkg] = useState<HuntingPackage | null>(null);
   const [counterpartyName, setCounterpartyName] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [draft, setDraft] = useState("");
@@ -44,7 +64,7 @@ const TripMessages = () => {
     (async () => {
       const { data: tripRow, error: tripErr } = await supabase
         .from("trip_requests")
-        .select("id, client_id, guide_id, status")
+        .select("id, client_id, guide_id, status, package_id")
         .eq("id", id)
         .maybeSingle();
 
@@ -55,6 +75,15 @@ const TripMessages = () => {
         return;
       }
       setTrip(tripRow);
+
+      if (tripRow.package_id) {
+        const { data: p } = await supabase
+          .from("hunting_packages")
+          .select("*")
+          .eq("id", tripRow.package_id)
+          .maybeSingle();
+        if (!cancelled && p) setPkg(p as HuntingPackage);
+      }
 
       // Resolve counterparty name
       const isClient = tripRow.client_id === user.id;
@@ -176,6 +205,61 @@ const TripMessages = () => {
           <p className="text-xs text-foreground-dim uppercase tracking-[0.2em] mt-1">
             Trip · {trip.status}
           </p>
+
+          {pkg && (
+            <div className="mt-4 bg-muted/40 border border-border rounded-md p-4">
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <div className="flex items-center gap-2">
+                  <Package className="w-4 h-4 text-accent" />
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-foreground-dim">Package</p>
+                    <h2 className="font-display text-base font-bold">{pkg.name}</h2>
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="font-display text-lg font-black text-accent">
+                    {formatPrice(pkg.price_cents, pkg.currency)}
+                  </p>
+                  <p className="text-[10px] uppercase tracking-wider text-foreground-dim flex items-center gap-1 justify-end">
+                    <Clock className="w-3 h-3" /> {pkg.duration_days} day{pkg.duration_days === 1 ? "" : "s"}
+                  </p>
+                </div>
+              </div>
+              {pkg.description && (
+                <p className="text-xs text-foreground-dim mb-2">{pkg.description}</p>
+              )}
+              {(pkg.inclusions.length > 0 || pkg.exclusions.length > 0) && (
+                <div className="grid sm:grid-cols-2 gap-3 text-xs mt-2">
+                  {pkg.inclusions.length > 0 && (
+                    <div>
+                      <p className="font-semibold text-foreground mb-1">Included</p>
+                      <ul className="space-y-1">
+                        {pkg.inclusions.map((it) => (
+                          <li key={it} className="flex items-start gap-1.5 text-foreground-dim">
+                            <Check className="w-3 h-3 text-accent mt-0.5 shrink-0" />
+                            <span>{it}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {pkg.exclusions.length > 0 && (
+                    <div>
+                      <p className="font-semibold text-foreground mb-1">Not included</p>
+                      <ul className="space-y-1">
+                        {pkg.exclusions.map((it) => (
+                          <li key={it} className="flex items-start gap-1.5 text-foreground-dim">
+                            <X className="w-3 h-3 text-destructive mt-0.5 shrink-0" />
+                            <span>{it}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
