@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { z } from "zod";
-import { ArrowLeft, Loader2, Send } from "lucide-react";
+import { ArrowLeft, Check, Loader2, Send, X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 const schema = z.object({
   preferred_start: z.string().optional(),
@@ -18,6 +19,24 @@ const schema = z.object({
   party_size: z.number().int().min(1).max(20),
   message: z.string().trim().max(1000).optional(),
 });
+
+interface HuntingPackage {
+  id: string;
+  name: string;
+  description: string | null;
+  price_cents: number;
+  currency: string;
+  duration_days: number;
+  inclusions: string[];
+  exclusions: string[];
+}
+
+const formatPrice = (cents: number, currency: string) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currency.toUpperCase(),
+    maximumFractionDigits: 0,
+  }).format(cents / 100);
 
 const RequestTrip = () => {
   const { id } = useParams<{ id: string }>();
@@ -27,6 +46,8 @@ const RequestTrip = () => {
   const clearList = useTripList((s) => s.clear);
 
   const [guideName, setGuideName] = useState<string>("");
+  const [packages, setPackages] = useState<HuntingPackage[]>([]);
+  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
@@ -40,13 +61,21 @@ const RequestTrip = () => {
   useEffect(() => {
     if (!id) return;
     (async () => {
-      const { data } = await supabase
-        .from("guides")
-        .select("full_name")
-        .eq("id", id)
-        .eq("approval_status", "approved")
-        .maybeSingle();
-      setGuideName(data?.full_name ?? "");
+      const [{ data: guide }, { data: pkgs }] = await Promise.all([
+        supabase
+          .from("guides")
+          .select("full_name")
+          .eq("id", id)
+          .eq("approval_status", "approved")
+          .maybeSingle(),
+        supabase
+          .from("hunting_packages")
+          .select("*")
+          .eq("is_active", true)
+          .order("sort_order", { ascending: true }),
+      ]);
+      setGuideName(guide?.full_name ?? "");
+      setPackages(pkgs ?? []);
       setLoading(false);
     })();
   }, [id]);
@@ -56,6 +85,10 @@ const RequestTrip = () => {
     if (!user || !id) return;
     if (tripList.length === 0) {
       toast.error("Add animals to your hunting list first.");
+      return;
+    }
+    if (!selectedPackage) {
+      toast.error("Select a hunting package.");
       return;
     }
     const parsed = schema.safeParse({
@@ -73,6 +106,7 @@ const RequestTrip = () => {
       client_id: user.id,
       guide_id: id,
       animal_ids: tripList,
+      package_id: selectedPackage,
       preferred_start: start || null,
       preferred_end: end || null,
       party_size: party,
@@ -128,6 +162,83 @@ const RequestTrip = () => {
           )}
         </div>
 
+        {/* Package selector */}
+        <div className="mb-6">
+          <p className="text-xs uppercase tracking-[0.2em] text-foreground-dim mb-3">
+            Choose a hunting package
+          </p>
+          {packages.length === 0 ? (
+            <p className="text-foreground-dim text-sm bg-card border border-border rounded-lg p-6">
+              No packages available right now.
+            </p>
+          ) : (
+            <div className="grid gap-3">
+              {packages.map((pkg) => {
+                const active = selectedPackage === pkg.id;
+                return (
+                  <button
+                    key={pkg.id}
+                    type="button"
+                    onClick={() => setSelectedPackage(pkg.id)}
+                    className={cn(
+                      "text-left bg-card border rounded-lg p-5 transition-all",
+                      active
+                        ? "border-accent ring-2 ring-accent/40 shadow-lg"
+                        : "border-border hover:border-foreground-dim",
+                    )}
+                  >
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <div>
+                        <h3 className="font-display text-lg font-bold">{pkg.name}</h3>
+                        <p className="text-xs text-foreground-dim mt-0.5">
+                          {pkg.duration_days} day{pkg.duration_days === 1 ? "" : "s"}
+                        </p>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="font-display text-xl font-black text-accent">
+                          {formatPrice(pkg.price_cents, pkg.currency)}
+                        </p>
+                        <p className="text-[10px] uppercase tracking-wider text-foreground-dim">per person</p>
+                      </div>
+                    </div>
+                    {pkg.description && (
+                      <p className="text-sm text-foreground-dim mb-3">{pkg.description}</p>
+                    )}
+                    <div className="grid sm:grid-cols-2 gap-3 text-xs">
+                      {pkg.inclusions.length > 0 && (
+                        <div>
+                          <p className="font-semibold text-foreground mb-1">Included</p>
+                          <ul className="space-y-1">
+                            {pkg.inclusions.map((it) => (
+                              <li key={it} className="flex items-start gap-1.5 text-foreground-dim">
+                                <Check className="w-3 h-3 text-accent mt-0.5 shrink-0" />
+                                <span>{it}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {pkg.exclusions.length > 0 && (
+                        <div>
+                          <p className="font-semibold text-foreground mb-1">Not included</p>
+                          <ul className="space-y-1">
+                            {pkg.exclusions.map((it) => (
+                              <li key={it} className="flex items-start gap-1.5 text-foreground-dim">
+                                <X className="w-3 h-3 text-destructive mt-0.5 shrink-0" />
+                                <span>{it}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
         <form onSubmit={submit} className="bg-card border border-border rounded-lg p-6 space-y-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -167,7 +278,13 @@ const RequestTrip = () => {
             <p className="text-xs text-foreground-dim mt-1">{message.length}/1000</p>
           </div>
 
-          <Button type="submit" variant="hunt" size="lg" disabled={submitting || tripList.length === 0} className="w-full">
+          <Button
+            type="submit"
+            variant="hunt"
+            size="lg"
+            disabled={submitting || tripList.length === 0 || !selectedPackage}
+            className="w-full"
+          >
             {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             Send Request
           </Button>
