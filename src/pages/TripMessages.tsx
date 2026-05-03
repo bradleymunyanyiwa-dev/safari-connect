@@ -64,7 +64,7 @@ const TripMessages = () => {
     (async () => {
       const { data: tripRow, error: tripErr } = await supabase
         .from("trip_requests")
-        .select("id, client_id, guide_id, status")
+        .select("id, client_id, guide_id, status, package_id")
         .eq("id", id)
         .maybeSingle();
 
@@ -75,6 +75,15 @@ const TripMessages = () => {
         return;
       }
       setTrip(tripRow);
+
+      if (tripRow.package_id) {
+        const { data: p } = await supabase
+          .from("hunting_packages")
+          .select("*")
+          .eq("id", tripRow.package_id)
+          .maybeSingle();
+        if (!cancelled && p) setPkg(p as HuntingPackage);
+      }
 
       // Resolve counterparty name
       const isClient = tripRow.client_id === user.id;
