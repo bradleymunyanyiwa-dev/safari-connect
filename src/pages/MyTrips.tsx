@@ -190,11 +190,13 @@ const MyTrips = () => {
 const TripCard = ({
   trip,
   title,
+  pkg,
   isGuide,
   onUpdate,
 }: {
   trip: TripRow;
   title: string;
+  pkg?: HuntingPackage;
   isGuide: boolean;
   onUpdate: (id: string, status: TripStatus) => void;
 }) => {
