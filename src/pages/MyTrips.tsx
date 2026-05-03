@@ -58,6 +58,7 @@ const MyTrips = () => {
   const [trips, setTrips] = useState<TripRow[]>([]);
   const [guidesById, setGuidesById] = useState<Record<string, Guide>>({});
   const [clientsById, setClientsById] = useState<Record<string, Profile>>({});
+  const [packagesById, setPackagesById] = useState<Record<string, HuntingPackage>>({});
   const [loading, setLoading] = useState(true);
 
   const isGuide = role === "guide";
