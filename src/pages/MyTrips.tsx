@@ -15,6 +15,7 @@ type TripRow = {
   client_id: string;
   guide_id: string;
   animal_ids: number[];
+  package_id: string | null;
   preferred_start: string | null;
   preferred_end: string | null;
   party_size: number;
@@ -26,6 +27,23 @@ type TripRow = {
 
 type Guide = { id: string; full_name: string };
 type Profile = { user_id: string; display_name: string | null };
+type HuntingPackage = {
+  id: string;
+  name: string;
+  description: string | null;
+  price_cents: number;
+  currency: string;
+  duration_days: number;
+  inclusions: string[];
+  exclusions: string[];
+};
+
+const formatPrice = (cents: number, currency: string) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currency.toUpperCase(),
+    maximumFractionDigits: 0,
+  }).format(cents / 100);
 
 const statusVariant: Record<TripStatus, "default" | "secondary" | "destructive" | "outline"> = {
   pending: "secondary",
