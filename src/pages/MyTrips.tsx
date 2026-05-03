@@ -101,6 +101,18 @@ const MyTrips = () => {
         setGuidesById(map);
       }
     }
+
+    const pkgIds = Array.from(new Set(list.map((t) => t.package_id).filter(Boolean) as string[]));
+    if (pkgIds.length) {
+      const { data: pkgs } = await supabase
+        .from("hunting_packages")
+        .select("*")
+        .in("id", pkgIds);
+      const map: Record<string, HuntingPackage> = {};
+      (pkgs ?? []).forEach((p) => (map[p.id] = p as HuntingPackage));
+      setPackagesById(map);
+    }
+
     setLoading(false);
   };
 
