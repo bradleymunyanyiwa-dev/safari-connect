@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Loader2, Calendar, Users, MessageSquare } from "lucide-react";
+import { ArrowLeft, Loader2, Calendar, Users, MessageSquare, Package, Check, X, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
