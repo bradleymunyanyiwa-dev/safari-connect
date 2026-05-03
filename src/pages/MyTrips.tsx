@@ -175,6 +175,7 @@ const MyTrips = () => {
                     ? clientsById[t.client_id]?.display_name ?? "Hunter"
                     : guidesById[t.guide_id]?.full_name ?? "Guide"
                 }
+                pkg={t.package_id ? packagesById[t.package_id] : undefined}
                 isGuide={isGuide}
                 onUpdate={updateStatus}
               />
